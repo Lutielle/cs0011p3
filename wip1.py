@@ -368,4 +368,5 @@ class PetriDish:
             for cell in row:
                 if cell = row[-1]:
                     print(__str__(cell))
-                print(__str__(cell), end = " ")
+                else:
+                    print(__str__(cell), end = " ")
