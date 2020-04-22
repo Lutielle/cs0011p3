@@ -1,5 +1,6 @@
 import random
-import nmclass
+from nmclass import Nutrient
+from nmclass import Microbe
 
 class PetriCell:
     def __init__(self):
@@ -36,8 +37,12 @@ class PetriCell:
         unmoved = []
         for nutrient in self.nutrients:
             if nutrient.getMoved() == False:
-                self.nutrients.remove(nutrient)
+                #self.nutrients.remove(nutrient)
+                #I realized this was messing up the loop by changing its indexing
                 unmoved.append(nutrient)
+
+        self.nutrients = list(set(self.nutrients) - set(unmoved))
+        #so I opted to use sets to alter self.nutrients instead
         return unmoved
 
     def clearAllMoved(self):
@@ -47,7 +52,7 @@ class PetriCell:
 
     def hasNutrients(self):
     #Should return True if the nutrients attribute has any nutrients, and False if it is empty.
-        if len(nutrients) == 0:
+        if len(self.nutrients) == 0:
             return False
         else:
             return True
@@ -63,8 +68,10 @@ class PetriCell:
     #by the microbe should not count towards the total. The format is “M” if there is a microbe,
     #“ ” if there is not, followed by the length of the nutrients attribute followed by an “N”.
         if self.microbe != None:
-            print("M", end = "")
+            #print("M", end = "")
+            return "M{nutrients}N".format(nutrients = len(self.nutrients))
         else:
-            print("_", end = "")
+            #print("_", end = "")
+            return "_{nutrients}N".format(nutrients = len(self.nutrients))
 
-        print(len(self.nutrients), "N", sep = "")
+        #print(len(self.nutrients), "N", sep = "")

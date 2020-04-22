@@ -74,8 +74,10 @@ class PetriCell:
         unmoved = []
         for nutrient in self.nutrients:
             if nutrient.getMoved() == False:
-                self.nutrients.remove(nutrient)
+        #        self.nutrients.remove(nutrient)
                 unmoved.append(nutrient)
+
+        self.nutrients = list(set(self.nutrients) - set(unmoved))
         return unmoved
 
     def clearAllMoved(self):
@@ -85,7 +87,7 @@ class PetriCell:
 
     def hasNutrients(self):
     #Should return True if the nutrients attribute has any nutrients, and False if it is empty.
-        if len(nutrients) == 0:
+        if len(self.nutrients) == 0:
             return False
         else:
             return True
@@ -100,12 +102,21 @@ class PetriCell:
     #"_3N". A cell with a microbe and 1 nutrient should return "M1N". Note that a nutrient held
     #by the microbe should not count towards the total. The format is “M” if there is a microbe,
     #“ ” if there is not, followed by the length of the nutrients attribute followed by an “N”.
-        if self.microbe != None:
-            print("M", end = "")
-        else:
-            print("_", end = "")
+        #if self.microbe != None:
+        #    print("M", end = "")
+        #else:
+        #    print("_", end = "")
+        #print(len(self.nutrients), "N", sep = "")
 
-        print(len(self.nutrients), "N", sep = "")
+        if self.microbe != None:
+            #print("M", end = "")
+            return "M{nutrients}N".format(nutrients = len(self.nutrients))
+        else:
+            #print("_", end = "")
+            return "_{nutrients}N".format(nutrients = len(self.nutrients))
+
+        #print(len(self.nutrients), "N", sep = "")
+
 
 """class PetriDish:
     def __init__(self, x, y, concentration, microbes):
@@ -364,9 +375,39 @@ class PetriDish:
     #This method will be essential for debugging. Should call __str__() for each
     #PetriCell and return the result as a grid. Each row of the grid should be its own line. All
     #of the cells in a row should be separated by a single space.
+        #for row in self.grid:
+        #    for cell in row:
+        #        if cell = row[-1]:
+        #            print(__str__(cell))
+        #        else:
+        #            print(__str__(cell), end = " ")
+
+        #as you can probably tell this gave me a lot of trouble
+        retGrid = []
         for row in self.grid:
+            retRow = []
             for cell in row:
-                if cell = row[-1]:
-                    print(__str__(cell))
-                else:
-                    print(__str__(cell), end = " ")
+                #if cell == row[-1]:
+                    #print(__str__(cell))
+                    #return "{cell}\n".format(cell = cell)
+                    #pass
+                    #print(cell)
+                #else:
+                    #print(__str__(cell), end = " ")
+                    #return "{cell} ".format(cell = cell)
+                    #pass
+                    #print(cell, end = " ")
+
+                retRow.append(cell.__str__())
+                strRow = " ".join(retRow)
+                #print(" ".join(retRow))
+            retGrid.append(strRow)
+            #print("\n".join(retGrid))
+
+        #for i in retGrid:
+        #    print(" ".join(i))
+
+        return "\n".join(str(l) for l in retGrid)
+        #" ".join(str(i) for i in retRow)
+        #return " ".join(str(retRow) for l in retGrid)
+        #return "{grid}".format(grid = "\n".join(" ".join(retGrid)))

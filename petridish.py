@@ -1,6 +1,7 @@
 import random
-import nmclass
-import petricell
+from nmclass import Nutrient
+from nmclass import Microbe
+from petricell import PetriCell
 
 class PetriDish:
     def __init__(self, x, y, concentration, microbes):
@@ -38,6 +39,7 @@ class PetriDish:
                 #while cell.hasNutrients(): -- Also realized I wasn't checking if nutrients
                 #had been moved already before moving them, so this was rewritten.
                 unmoved = cell.getUnmoved()
+                #print(unmoved)
                 for nut in unmoved:
                     #welcome to the nightmare if block of making things not move off-grid
                     #I am not looking forward to potentially doing this again with the microbes
@@ -106,7 +108,7 @@ class PetriDish:
                     #making a Microbe object to act on
                     if mic.hasNutrient() == False and cell.hasNutrients() == True:
                     #if the microbe doesn't have a nutrient and the cell does
-                        mic.takeNutrient(getNutrient())
+                        mic.takeNutrient(cell.getNutrient())
                         #make heldNutrient True and remove the nutrient from that cell's nutrients list
 
                         #Welcome to the neighbor-testing section!
@@ -116,16 +118,21 @@ class PetriDish:
                         #if mic.hasNutrient() == True: -- Implied already.
                         for xNeighbor in range(-1, 2):
                             for yNeighbor in range(-1, 2):
-                                neighbor = self.grid[xNeighbor][yNeighbor]
-                                #Index Values: Return of the - you know, this is way less funny.
-                                if xNeighbor == 0:
-                                    if yNeighbor == 0:
-                                    #excluding the original cell
-                                        continue
-                                if neighbor.hasMicrobe() == False:
-                                #testing whether neighbors have microbes
-                                    validNeighbors.append((xNeighbor, yNeighbor))
-                                    #and if they don't, add their coordinates to a list
+                                nxCoord = row + xNeighbor
+                                nyCoord = col + yNeighbor
+                                if nxCoord >= 0 and nxCoord <= len(self.grid) - 1:
+                                    if nyCoord >= 0 and nyCoord <= len(self.grid[row]) - 1:
+                                        neighbor = self.grid[nxCoord][nyCoord]
+                                        #Index Values: Return of the - you know, this is way less funny.
+                                        if xNeighbor == 0:
+                                            if yNeighbor == 0:
+                                            #excluding the original cell
+                                                continue
+
+                                        if neighbor.hasMicrobe() == False:
+                                        #testing whether neighbors have microbes
+                                            validNeighbors.append((nxCoord, nyCoord))
+                                            #and if they don't, add their coordinates to a list
 
                         try:
                             newMicrobes.append(random.choice(validNeighbors))
@@ -138,22 +145,33 @@ class PetriDish:
                         #set the microbe's heldNutrient to False again
 
         for coord in newMicrobes: #for tuple in list
-            self.grid[mic[0]][mic[1]].createMicrobe() #make a new microbe
+            self.grid[coord[0]][coord[1]].createMicrobe() #make a new microbe
 
     def step(self, iterations):
     #Should run through iterations steps of the simulation.
     #Each step of the simulation should call moveNutrients() and then checkMicrobes().
-        for i in range(interations + 1):
-            self.moveNutrients()
-            self.checkMicrobes()
+        for i in range(iterations):
+            if i != 0:
+                self.moveNutrients()
+                self.checkMicrobes()
+            print(self)
+            print()
 
     def __str__(self):
     #This method will be essential for debugging. Should call __str__() for each
     #PetriCell and return the result as a grid. Each row of the grid should be its own line. All
     #of the cells in a row should be separated by a single space.
+        retGrid = []
         for row in self.grid:
+            retRow = []
             for cell in row:
-                if cell = row[-1]:
-                    print(__str__(cell))
-                else:
-                    print(__str__(cell), end = " ")
+                retRow.append(cell.__str__())
+                strRow = " ".join(retRow)
+                #print(" ".join(retRow))
+            retGrid.append(strRow)
+            #print("\n".join(retGrid))
+
+        #for i in retGrid:
+            #print(" ".join(i))
+
+        return "\n".join(str(l) for l in retGrid)
