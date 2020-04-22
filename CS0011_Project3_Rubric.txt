@@ -1,0 +1,8 @@
+Nutrient class written as specified: 15
+Microbe class written as specified: 15
+PetriCell's getUnmoved method works as specified: 10
+The rest of PetricCell is written as specified: 10
+PetriDisk's moveNutrients method works as specified: 10
+PetriDisk's checkMicrobes method works as specified: 10
+The rest of PetriDisk is written as specified: 10
+Code is well laid-out and commented: 20
